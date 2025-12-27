@@ -1,8 +1,16 @@
 {
+    "cleanUrls": true,
+    "trailingSlash": false,
+    "redirects": [
+        {
+            "source": "/",
+            "destination": "/QR/index.html"
+        }
+    ],
     "rewrites": [
         {
-            "source": "/(.*)",
-            "destination": "/QR/$1"
+            "source": "/:path*",
+            "destination": "/QR/:path*"
         }
     ]
 }
