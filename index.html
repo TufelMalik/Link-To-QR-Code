@@ -147,14 +147,7 @@
                     </div>
                     <h1 class="text-lg font-bold tracking-tight text-white">QR Studio</h1>
                 </div>
-                <div class="flex items-center gap-4">
-                    <button class="text-sm text-slate-400 hover:text-white transition-colors">My Codes</button>
-                    <div class="h-4 w-[1px] bg-slate-700"></div>
-                    <button id="themeToggle"
-                        class="p-2 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-primary transition-colors">
-                        <span class="material-icons-round text-sm">light_mode</span>
-                    </button>
-                </div>
+
             </div>
         </div>
     </nav>
@@ -274,6 +267,18 @@
                                     class="gradient-preset w-full aspect-square rounded-full bg-gradient-to-br from-slate-200 to-slate-600 hover:ring-2 ring-white/50 ring-offset-2 ring-offset-slate-900 transition-all"></button>
                                 <button data-gradient="lavender"
                                     class="gradient-preset w-full aspect-square rounded-full bg-gradient-to-br from-[#8EC5FC] to-[#E0C3FC] hover:ring-2 ring-white/50 ring-offset-2 ring-offset-slate-900 transition-all"></button>
+                                <button data-gradient="royal"
+                                    class="gradient-preset w-full aspect-square rounded-full bg-gradient-to-br from-purple-600 via-violet-600 to-indigo-600 hover:ring-2 ring-white/50 ring-offset-2 ring-offset-slate-900 transition-all"></button>
+                                <button data-gradient="midnight"
+                                    class="gradient-preset w-full aspect-square rounded-full bg-gradient-to-br from-blue-900 via-blue-700 to-cyan-500 hover:ring-2 ring-white/50 ring-offset-2 ring-offset-slate-900 transition-all"></button>
+                                <button data-gradient="forest"
+                                    class="gradient-preset w-full aspect-square rounded-full bg-gradient-to-br from-green-700 via-emerald-600 to-teal-500 hover:ring-2 ring-white/50 ring-offset-2 ring-offset-slate-900 transition-all"></button>
+                                <button data-gradient="crimson"
+                                    class="gradient-preset w-full aspect-square rounded-full bg-gradient-to-br from-red-600 via-rose-600 to-pink-500 hover:ring-2 ring-white/50 ring-offset-2 ring-offset-slate-900 transition-all"></button>
+                                <button data-gradient="golden"
+                                    class="gradient-preset w-full aspect-square rounded-full bg-gradient-to-br from-amber-500 via-orange-500 to-yellow-400 hover:ring-2 ring-white/50 ring-offset-2 ring-offset-slate-900 transition-all"></button>
+                                <button data-gradient="monochrome"
+                                    class="gradient-preset w-full aspect-square rounded-full bg-gradient-to-br from-gray-800 via-gray-600 to-gray-400 hover:ring-2 ring-white/50 ring-offset-2 ring-offset-slate-900 transition-all"></button>
                             </div>
 
                             <!-- Custom Gradient Builder -->
@@ -464,10 +469,10 @@
                             </div>
 
                             <!-- Title -->
-                            <h2 id="previewTitle"
-                                class="mt-6 text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-violet-600">
+                            <h2 id="previewTitle" class="mt-6 text-2xl font-bold" style="color: #ffffff;">
                                 @restaurant_nyc</h2>
-                            <p id="previewTagline" class="mt-1 text-sm text-slate-500 font-medium">VIEW MENU</p>
+                            <p id="previewTagline" class="mt-1 text-sm font-medium" style="color: #cbd5e1;">VIEW MENU
+                            </p>
                         </div>
 
                         <!-- How to Scan Section -->
@@ -526,6 +531,12 @@
             sunset: { colors: ['#f97316', '#f43f5e'], css: 'from-orange-500 to-rose-500' },
             silver: { colors: ['#e2e8f0', '#475569'], css: 'from-slate-200 to-slate-600' },
             lavender: { colors: ['#8EC5FC', '#E0C3FC'], css: 'from-[#8EC5FC] to-[#E0C3FC]' },
+            royal: { colors: ['#9333ea', '#7c3aed', '#6366f1'], css: 'from-purple-600 via-violet-600 to-indigo-600' },
+            midnight: { colors: ['#1e3a8a', '#1d4ed8', '#06b6d4'], css: 'from-blue-900 via-blue-700 to-cyan-500' },
+            forest: { colors: ['#15803d', '#059669', '#14b8a6'], css: 'from-green-700 via-emerald-600 to-teal-500' },
+            crimson: { colors: ['#dc2626', '#e11d48', '#ec4899'], css: 'from-red-600 via-rose-600 to-pink-500' },
+            golden: { colors: ['#f59e0b', '#f97316', '#facc15'], css: 'from-amber-500 via-orange-500 to-yellow-400' },
+            monochrome: { colors: ['#1f2937', '#4b5563', '#9ca3af'], css: 'from-gray-800 via-gray-600 to-gray-400' },
         };
 
         // =============================================
@@ -879,6 +890,23 @@
         }
 
         // =============================================
+        // Preview Text Update
+        // =============================================
+        function updatePreviewText() {
+            const title = elements.qrTitle.value || 'Scan Me';
+            const tagline = elements.qrTagline.value || 'Visit Our Website';
+            const titleColor = elements.titleColor.value;
+            const taglineColor = elements.taglineColor.value;
+
+            elements.previewTitle.textContent = title;
+            elements.previewTagline.textContent = tagline;
+            elements.previewTitle.style.color = titleColor;
+            elements.previewTagline.style.color = taglineColor;
+            elements.previewTitle.style.fontFamily = selectedFont;
+            elements.previewTagline.style.fontFamily = selectedFont;
+        }
+
+        // =============================================
         // Download
         // =============================================
         async function downloadQR(format) {
@@ -986,20 +1014,18 @@
             const titleY = qrY + qrSize + 50;
             ctx.font = 'bold 36px Inter, sans-serif';
             ctx.textAlign = 'center';
+            // Get user-selected colors
+            const titleColor = elements.titleColor.value;
+            const taglineColor = elements.taglineColor.value;
 
-            // Create gradient for title text
-            const titleGradient = ctx.createLinearGradient(
-                cardX + cardWidth * 0.3, titleY,
-                cardX + cardWidth * 0.7, titleY
-            );
-            titleGradient.addColorStop(0, '#db2777'); // pink-600
-            titleGradient.addColorStop(1, '#7c3aed'); // violet-600
-            ctx.fillStyle = titleGradient;
+            // Draw title
+            ctx.font = `700 32px ${selectedFont}, sans-serif`;
+            ctx.fillStyle = titleColor;
             ctx.fillText(title, canvasWidth / 2, titleY);
 
             // Draw tagline
             ctx.font = '500 18px Inter, sans-serif';
-            ctx.fillStyle = '#64748b'; // slate-500
+            ctx.fillStyle = taglineColor;
             ctx.fillText(tagline, canvasWidth / 2, titleY + 35);
 
             // Draw "How to Scan" section
